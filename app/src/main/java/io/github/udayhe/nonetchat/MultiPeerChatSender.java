@@ -10,6 +10,8 @@ import java.util.Map;
 public class MultiPeerChatSender {
 
     private static final String TAG = "MultiPeerChatSender";
+
+    // Maps username → writer
     private final Map<String, PrintWriter> userWriters = Collections.synchronizedMap(new HashMap<>());
 
     public void addUserWriter(String username, PrintWriter writer) {
@@ -21,35 +23,44 @@ public class MultiPeerChatSender {
         PrintWriter writer = userWriters.remove(username);
         if (writer != null) {
             writer.close();
+            Log.d(TAG, "Writer removed for: " + username);
         }
-        Log.d(TAG, "Removed writer for: " + username);
     }
 
     public void sendToUser(String username, String message) {
         PrintWriter writer = userWriters.get(username);
         if (writer != null) {
-            try {
-                writer.println(message);
-                Log.d(TAG, "Sent to " + username + ": " + message);
-            } catch (Exception e) {
-                Log.e(TAG, "Failed to send to " + username, e);
-            }
+            writer.println(message);
+            Log.d(TAG, "Message sent to " + username + ": " + message);
         } else {
-            Log.w(TAG, "No writer found for user: " + username);
+            Log.w(TAG, "Writer not found for user: " + username);
         }
     }
 
+    public void broadcast(String message) {
+        synchronized (userWriters) {
+            for (Map.Entry<String, PrintWriter> entry : userWriters.entrySet()) {
+                try {
+                    entry.getValue().println(message);
+                    Log.d(TAG, "Broadcasted to " + entry.getKey());
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed to send to " + entry.getKey(), e);
+                }
+            }
+        }
+    }
 
     public void shutdown() {
-        for (Map.Entry<String, PrintWriter> entry : userWriters.entrySet()) {
-            try {
-                entry.getValue().close();
-            } catch (Exception e) {
-                Log.e(TAG, "Error closing writer for user: " + entry.getKey(), e);
+        synchronized (userWriters) {
+            for (Map.Entry<String, PrintWriter> entry : userWriters.entrySet()) {
+                try {
+                    entry.getValue().close();
+                } catch (Exception e) {
+                    Log.e(TAG, "Error closing writer for " + entry.getKey(), e);
+                }
             }
+            userWriters.clear();
+            Log.d(TAG, "All writers shut down");
         }
-        userWriters.clear();
-        Log.d(TAG, "All user writers shut down");
     }
 }
-

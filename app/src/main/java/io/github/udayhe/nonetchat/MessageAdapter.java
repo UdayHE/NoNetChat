@@ -3,7 +3,6 @@ package io.github.udayhe.nonetchat;
 import android.content.Context;
 import android.view.*;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
+
     private final List<Message> messages;
     private final Context context;
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
@@ -21,11 +21,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        public TextView messageText, messageTime;
+        TextView messageSender;
+        TextView messageContent;
+        TextView messageTime;
 
-        public MessageViewHolder(View itemView) {
+        public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
-            messageText = itemView.findViewById(R.id.messageText);
+            messageSender = itemView.findViewById(R.id.messageSender);
+            messageContent = itemView.findViewById(R.id.messageContent);
             messageTime = itemView.findViewById(R.id.messageTime);
         }
     }
@@ -38,9 +41,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     @Override
-    public void onBindViewHolder(MessageViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Message msg = messages.get(position);
-        holder.messageText.setText(msg.getContent());
+        String senderLabel = msg.getSender() + " → " + msg.getRecipient();
+        holder.messageSender.setText(senderLabel);
+        holder.messageContent.setText(msg.getContent());
         holder.messageTime.setText(timeFormat.format(new Date(msg.getTimestamp())));
     }
 

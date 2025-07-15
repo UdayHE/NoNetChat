@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -102,6 +103,18 @@ public class MainActivity extends AppCompatActivity {
         receiver = new WiFiDirectBroadcastReceiver(manager, channel, this);
         checkAndRequestPermissions();
 
+        boolean isGroupOwner = getIntent().getBooleanExtra("isGroupOwner", false);
+        String hostAddress = getIntent().getStringExtra("groupOwnerAddress");
+
+        if (isGroupOwner) {
+            startServer();
+        } else {
+            try {
+                connectToHost(InetAddress.getByName(hostAddress));
+            } catch (IOException e) {
+                Toast.makeText(this, "Invalid host", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void checkAndRequestPermissions() {
@@ -182,8 +195,10 @@ public class MainActivity extends AppCompatActivity {
     void connectToHost(InetAddress hostAddress) {
         new Thread(() -> {
             try {
+                Log.d(TAG, "Attempting to connect to host: " + hostAddress);
                 socket = new Socket();
-                socket.connect(new InetSocketAddress(hostAddress, PORT), 5000);
+                socket.connect(new InetSocketAddress(hostAddress, PORT), 8000);
+
                 PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
@@ -192,6 +207,12 @@ public class MainActivity extends AppCompatActivity {
 
                 chatSender = new MultiPeerChatSender();
                 chatSender.addUserWriter("Host", writer);
+
+                runOnUiThread(() -> {
+                    userList.clear();
+                    userList.add("Host");
+                    updateSpinner();
+                });
 
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -202,8 +223,12 @@ public class MainActivity extends AppCompatActivity {
                         recyclerView.smoothScrollToPosition(messages.size() - 1);
                     });
                 }
+
             } catch (IOException e) {
                 Log.e(TAG, "Client connection failed", e);
+                runOnUiThread(() ->
+                        Toast.makeText(MainActivity.this, "Failed to connect to server", Toast.LENGTH_SHORT).show()
+                );
             }
         }).start();
     }

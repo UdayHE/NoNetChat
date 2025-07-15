@@ -106,27 +106,6 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                     for (WifiP2pDevice device : peers.getDeviceList()) {
                         Log.d(TAG, "Peer: " + device.deviceName + " - " + device.deviceAddress);
                     }
-
-                    // Optional: Uncomment to auto-connect to first peer
-                    /*
-                    if (!peers.getDeviceList().isEmpty()) {
-                        WifiP2pDevice device = peers.getDeviceList().iterator().next();
-                        WifiP2pConfig config = new WifiP2pConfig();
-                        config.deviceAddress = device.deviceAddress;
-
-                        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
-                            @Override
-                            public void onSuccess() {
-                                Log.d(TAG, "Auto-connect success");
-                            }
-
-                            @Override
-                            public void onFailure(int reason) {
-                                Log.e(TAG, "Auto-connect failed: " + reason);
-                            }
-                        });
-                    }
-                    */
                 });
                 break;
 
