@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Main app theme -->
+    <style name="Theme.NoNetChat.Main" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#00FF00</item>
+        <item name="android:statusBarColor">#000000</item>
+    </style>
+
+    <!-- Application theme (only necessary if setting splash on newer devices) -->
+    <style name="Theme.NoNetChat" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowSplashScreenBackground">#000000</item>
+        <!-- REMOVE windowSplashScreenDuration if compileSdk < 31 -->
+        <!-- REMOVE postSplashScreenTheme if compileSdk < 31 -->
+    </style>
+
+</resources>

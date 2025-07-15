@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#000000">
+
+    <Button
+        android:id="@+id/discoverBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/discover_peers"
+        android:textColor="#00FF00"
+        android:background="@android:color/transparent"
+        android:fontFamily="monospace" />
+
+    <ListView
+        android:id="@+id/deviceList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:dividerHeight="1dp"
+        android:layout_marginTop="10dp"
+        android:background="#000000"
+        android:cacheColorHint="#000000"
+        android:scrollbars="vertical" />
+</LinearLayout>
