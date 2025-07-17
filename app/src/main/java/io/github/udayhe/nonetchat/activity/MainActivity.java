@@ -1,4 +1,4 @@
-package io.github.udayhe.nonetchat;
+package io.github.udayhe.nonetchat.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,6 +34,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import io.github.udayhe.nonetchat.adapter.MessageAdapter;
+import io.github.udayhe.nonetchat.sender.MultiPeerChatSender;
+import io.github.udayhe.nonetchat.R;
+import io.github.udayhe.nonetchat.wifi.WiFiDirectBroadcastReceiver;
+import io.github.udayhe.nonetchat.payload.Message;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -134,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void startServer() {
+    public void startServer() {
         chatSender = new MultiPeerChatSender();
         new Thread(() -> {
             try {
@@ -192,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         recipientSpinner.setAdapter(spinnerAdapter);
     }
 
-    void connectToHost(InetAddress hostAddress) {
+    public void connectToHost(InetAddress hostAddress) {
         new Thread(() -> {
             try {
                 Log.d(TAG, "Attempting to connect to host: " + hostAddress);

@@ -1,4 +1,4 @@
-package io.github.udayhe.nonetchat;
+package io.github.udayhe.nonetchat.payload;
 
 public class Message {
     private final String sender;

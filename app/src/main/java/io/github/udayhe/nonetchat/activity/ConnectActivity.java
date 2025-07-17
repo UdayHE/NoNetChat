@@ -1,4 +1,4 @@
-package io.github.udayhe.nonetchat;
+package io.github.udayhe.nonetchat.activity;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -24,6 +24,8 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.github.udayhe.nonetchat.R;
 
 public class ConnectActivity extends AppCompatActivity {
 

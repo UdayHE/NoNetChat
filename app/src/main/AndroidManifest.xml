@@ -19,9 +19,9 @@
         android:theme="@style/Theme.NoNetChat">
 
 
-        <activity android:name=".MainActivity" android:exported="true" />
+        <activity android:name=".activity.MainActivity" android:exported="true" />
 
-        <activity android:name=".ConnectActivity" android:exported="true">
+        <activity android:name=".activity.ConnectActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

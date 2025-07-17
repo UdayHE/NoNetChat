@@ -1,4 +1,4 @@
-package io.github.udayhe.nonetchat;
+package io.github.udayhe.nonetchat.wifi;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+
+import io.github.udayhe.nonetchat.activity.MainActivity;
 
 public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 

@@ -1,4 +1,4 @@
-package io.github.udayhe.nonetchat;
+package io.github.udayhe.nonetchat.adapter;
 
 import android.content.Context;
 import android.view.*;
@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import io.github.udayhe.nonetchat.R;
+import io.github.udayhe.nonetchat.payload.Message;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
