@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(this::updateSpinner);
                     chatSender.addUserWriter(username, writer);
 
-                    new Thread(() -> receiveFromClient(client, username, reader)).start();
+                    new Thread(() -> receiveFromClient(username, reader)).start();
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Server error", e);
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void receiveFromClient(Socket client, String username, BufferedReader reader) {
+    private void receiveFromClient(String username, BufferedReader reader) {
         try {
             String line;
             while ((line = reader.readLine()) != null) {
