@@ -3,16 +3,20 @@ package io.github.udayhe.nonetchat.sender;
 import android.util.Log;
 
 import java.io.PrintWriter;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MultiPeerChatSender {
 
     private static final String TAG = "MultiPeerChatSender";
 
-    // Maps username → writer
-    private final Map<String, PrintWriter> userWriters = Collections.synchronizedMap(new HashMap<>());
+
+    private final Map<String, PrintWriter> userWriters = new ConcurrentHashMap<>();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
+
+
 
     public void addUserWriter(String username, PrintWriter writer) {
         userWriters.put(username, writer);
@@ -30,12 +34,17 @@ public class MultiPeerChatSender {
     public void sendToUser(String username, String message) {
         PrintWriter writer = userWriters.get(username);
         if (writer != null) {
-            writer.println(message);
-            Log.d(TAG, "Message sent to " + username + ": " + message);
-        } else {
-            Log.w(TAG, "Writer not found for user: " + username);
+            executor.execute(() -> {
+                try {
+                    writer.println(message);
+                    writer.flush();
+                } catch (Exception e) {
+                    Log.e("ChatSender", "Failed to send to " + username, e);
+                }
+            });
         }
     }
+
 
     public void broadcast(String message) {
         synchronized (userWriters) {
@@ -51,16 +60,10 @@ public class MultiPeerChatSender {
     }
 
     public void shutdown() {
-        synchronized (userWriters) {
-            for (Map.Entry<String, PrintWriter> entry : userWriters.entrySet()) {
-                try {
-                    entry.getValue().close();
-                } catch (Exception e) {
-                    Log.e(TAG, "Error closing writer for " + entry.getKey(), e);
-                }
-            }
-            userWriters.clear();
-            Log.d(TAG, "All writers shut down");
+        executor.shutdownNow();
+        for (PrintWriter writer : userWriters.values()) {
+            writer.close();
         }
+        userWriters.clear();
     }
 }
